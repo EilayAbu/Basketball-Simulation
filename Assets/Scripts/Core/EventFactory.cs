@@ -18,5 +18,9 @@ namespace VRHoops.Core
                 yield return GameEventType.PlayersDisappointed;
             }
         }
+        public static IEnumerable<GameEventType> BuildGameStart()
+        {
+            yield return GameEventType.GameStart;
+        }
     }
 }

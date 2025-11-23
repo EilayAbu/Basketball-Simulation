@@ -7,11 +7,13 @@ namespace VRHoops.Core
     // אירועים לוגיים כלליים במשחק
     public enum GameEventType
     {
+        GameStart,          
         CrowdCheer,
         CrowdBoo,
         PlayersCelebrate,
         PlayersDisappointed
     }
+
 
     // לא חובה כרגע, שימושי אם תרצה לסווג מאזינים
     public enum ActorType
