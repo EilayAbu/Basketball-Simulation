@@ -32,7 +32,7 @@ public class BasketballThrow : MonoBehaviour
             Vector3 vel = (currentPos - lastPos) / Time.deltaTime;
 
             lastVel = vel;
-            lastAngularVel = rightHand.GetComponent<Rigidbody>()?.angularVelocity ?? Vector3.zero;
+            
 
             lastPos = currentPos;
         }

@@ -217,9 +217,9 @@ GameObject:
   - component: {fileID: 8064970058264313442}
   - component: {fileID: 2555562128928926364}
   - component: {fileID: 7738584788774844605}
+  - component: {fileID: 3615523885539352738}
   - component: {fileID: 5599912747136621273}
   - component: {fileID: 2650375451417065480}
-  - component: {fileID: 5001714932854449255}
   m_Layer: 0
   m_Name: basketball
   m_TagString: Ball
@@ -343,10 +343,26 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &3615523885539352738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8559673984510303522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fbe4bfd72b331647abfd707a8fac44c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightHand: {fileID: 0}
+  power: 1.4
+  maxSpeed: 14
+  spinBoost: 1.3
 --- !u!114 &5599912747136621273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,19 +398,3 @@ MonoBehaviour:
   _rigidbody: {fileID: 7738584788774844605}
   _kinematicWhileSelected: 1
   _throwWhenUnselected: 1
---- !u!114 &5001714932854449255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8559673984510303522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fbe4bfd72b331647abfd707a8fac44c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  power: 1.4
-  verticalBoost: 1.15
-  spinBoost: 1.3
-  maxSpeed: 14

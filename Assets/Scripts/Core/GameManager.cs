@@ -20,6 +20,7 @@ namespace VRHoops.Core
         private float _lastBasketTime = -999f;
         private GameState currentState = GameState.Idle;
         private BallController activeBall;
+        [SerializeField] private GameObject rightHand;
 
         private void Awake()
         {
@@ -53,7 +54,10 @@ namespace VRHoops.Core
 
             var newBall = Instantiate(ballPrefab, spawnPoint.position, spawnPoint.rotation);
             activeBall = newBall.GetComponent<BallController>();
+            activeBall.gameObject.SetActive(true);
             activeBall.Initialize(this);
+            activeBall.GetComponent<BasketballThrow>().rightHand = rightHand.transform;
+
 
             // לאחר השריקה, מאפשר זריקה
             Invoke(nameof(EnableThrow), 1.2f);

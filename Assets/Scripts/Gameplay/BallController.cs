@@ -23,17 +23,7 @@ namespace VRHoops.Gameplay
             hasScored = false;
         }
 
-        public void MarkAsThrown()
-        {
-            if (!canBeThrown)
-            {
-                Debug.Log("🚫 Cannot throw yet! Wait for referee whistle.");
-                return;
-            }
-
-            canBeThrown = false;
-            gameManager.OnBallThrown();
-        }
+        
 
         public void MarkAsScored()
         {
