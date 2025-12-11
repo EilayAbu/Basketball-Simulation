@@ -10,7 +10,12 @@ namespace VRHoops.Core
 
         // אירועי משחק כלליים (Cheer/Boo/וכו')
         public static event Action<GameEventType> OnGameEvent;
+        public static event System.Action<int> OnStageChanged;
 
+        public static void PublishStageChanged(int stageIndex)
+        {
+            OnStageChanged?.Invoke(stageIndex);
+        }
         public static void PublishShotResult(ShotResult result)
         {
             OnShotResolved?.Invoke(result);

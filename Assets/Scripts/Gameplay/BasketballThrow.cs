@@ -1,19 +1,24 @@
 ﻿using UnityEngine;
+using Oculus.Interaction;
 
 public class BasketballThrow : MonoBehaviour
 {
-    public Transform rightHand;   // השורש של יד ימין (Meta XR Hand)
+    [Header("Hand Reference")]
+    [Tooltip("Transform of the player's right hand (from Meta XR Hand Rig)")]
+    public Transform rightHand;
+
+    [Header("Throw Settings")]
     public float power = 1.4f;
     public float maxSpeed = 14f;
-    public float spinBoost = 1.3f;
+    public float spinBoost = 1.2f;
 
     private Rigidbody rb;
+
+    private bool beingHeld = false;
 
     private Vector3 lastPos;
     private Vector3 lastVel;
     private Vector3 lastAngularVel;
-
-    private bool wasHeld;
 
     private void Awake()
     {
@@ -22,36 +27,49 @@ public class BasketballThrow : MonoBehaviour
 
     private void Update()
     {
-        // אם הכדור מוחזק (Meta הופכת אותו ל-Kinematic)
-        bool isHeld = rb.isKinematic;
+        // Only calculate velocity when ball is held
+        if (!beingHeld || rightHand == null)
+            return;
 
-        if (isHeld)
+        // Position velocity
+        Vector3 newPos = rightHand.position;
+        lastVel = (newPos - lastPos) / Time.deltaTime;
+        lastPos = newPos;
+
+        // Angular velocity (optional: if hand has a Rigidbody)
+        if (rightHand.TryGetComponent<Rigidbody>(out var handRb))
         {
-            // מחשבים Velocity של היד לפי שינוי מיקום
-            Vector3 currentPos = rightHand.position;
-            Vector3 vel = (currentPos - lastPos) / Time.deltaTime;
-
-            lastVel = vel;
-            
-
-            lastPos = currentPos;
+            lastAngularVel = handRb.angularVelocity;
         }
+    }
 
-        // Transition מ-Kinematic → Non-Kinematic = זריקה
-        if (wasHeld && !isHeld)
-        {
-            ThrowBall();
-        }
+    // Called when the ball is grabbed
+    public void OnSelect(PointerEvent evt)
+    {
+        beingHeld = true;
+        lastPos = rightHand.position;
 
-        wasHeld = isHeld;
+        // Optional: stop movement when picked up
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    // Called when the ball is released
+    public void OnUnselect(PointerEvent evt)
+    {
+        beingHeld = false;
+        ThrowBall();
     }
 
     private void ThrowBall()
     {
-        Vector3 v = lastVel * power;
-        v = Vector3.ClampMagnitude(v, maxSpeed);
+        // Apply velocity
+        Vector3 throwVel = lastVel * power;
+        throwVel = Vector3.ClampMagnitude(throwVel, maxSpeed);
 
-        rb.linearVelocity = v;
+        rb.linearVelocity = throwVel;
+
+        // Apply spin
         rb.angularVelocity = lastAngularVel * spinBoost;
     }
 }

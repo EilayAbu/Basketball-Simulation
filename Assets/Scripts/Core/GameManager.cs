@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Oculus.Interaction.HandGrab;
+using UnityEngine;
 using VRHoops.Gameplay;
 
 namespace VRHoops.Core
@@ -8,6 +9,11 @@ namespace VRHoops.Core
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
+
+        [Header("Experiment Logic")]
+        private int throwsInCurrentStand = 0; // סופר כמה זריקות זרקנו בעמדה הנוכחית
+        private int currentStandIndex = 0;    // איזה עמדה אנחנו כרגע
+        private const int THROWS_PER_STAND = 5;
 
         [Header("Settings")]
         [Tooltip("מניעת ספירה כפולה של סל.")]
@@ -20,8 +26,12 @@ namespace VRHoops.Core
         private float _lastBasketTime = -999f;
         private GameState currentState = GameState.Idle;
         private BallController activeBall;
-        [SerializeField] private GameObject rightHand;
+        [SerializeField] private Transform rightHand;
+        [SerializeField] private Transform leftHand;
 
+        [Header("Experiment Settings")]
+        [SerializeField] private GameObject playerRig; 
+        [SerializeField] private Transform[] shootingStands;
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -40,26 +50,53 @@ namespace VRHoops.Core
         }
 
         // מתחיל סיבוב חדש
+
         public void StartNewRound()
         {
+            // --- לוגיקת הניסוי: בדיקה אם צריך לעבור עמדה ---
+            if (throwsInCurrentStand >= THROWS_PER_STAND)
+            {
+                throwsInCurrentStand = 0;
+                currentStandIndex++;
+
+                // בדיקת סיום ניסוי
+                if (currentStandIndex >= shootingStands.Length)
+                {
+                    Debug.Log("🎉 Experiment Finished!");
+                    return;
+                }
+
+                MovePlayerToStand(currentStandIndex);
+            }
+            // -----------------------------------------------
+
             currentState = GameState.RoundStarting;
             Debug.Log("🏁 New round starting!");
 
-            // מפיץ אירוע שריקה
             EventBus.PublishGameEvent(GameEventType.GameStart);
 
-            // יוצר כדור חדש
+            // הסרת הכדור הישן אם קיים
             if (activeBall != null)
                 Destroy(activeBall.gameObject);
 
-            var newBall = Instantiate(ballPrefab, spawnPoint.position, spawnPoint.rotation);
-            activeBall = newBall.GetComponent<BallController>();
-            activeBall.gameObject.SetActive(true);
-            activeBall.Initialize(this);
-            activeBall.GetComponent<BasketballThrow>().rightHand = rightHand.transform;
+            // יצירת הכדור החדש
+            var newBallObj = Instantiate(ballPrefab, spawnPoint.position, spawnPoint.rotation);
 
+            // אתחול BallController (חובה ללוגיקת המשחק)
+            activeBall = newBallObj.GetComponent<BallController>();
+            if (activeBall != null)
+            {
+                activeBall.gameObject.SetActive(true);
+                activeBall.Initialize(this);
+            }
+            else
+            {
+                Debug.LogError("❌ Ball prefab is missing 'BallController' script!");
+            }
 
-            // לאחר השריקה, מאפשר זריקה
+            // אין צורך לחבר ידיים ל-EnhancedThrow כי הוא עובד עצמאית.
+
+            // מאפשר זריקה לאחר השהיה קצרה
             Invoke(nameof(EnableThrow), 1.2f);
         }
 
@@ -71,7 +108,21 @@ namespace VRHoops.Core
             currentState = GameState.WaitingForThrow;
             Debug.Log("✅ Player can now throw the ball!");
         }
+        private void MovePlayerToStand(int index)
+        {
+            // בדיקה שיש לנו את השחקן ושהאינדקס תקין
+            if (playerRig && index < shootingStands.Length)
+            {
+                // הזזת השחקן הפיזי
+                playerRig.transform.position = shootingStands[index].position;
+                playerRig.transform.rotation = shootingStands[index].rotation;
 
+                // שליחת הודעה למערכת (בשביל הקהל והשחקנים האחרים)
+                EventBus.PublishStageChanged(index);
+
+                Debug.Log($"Moved player to stand #{index}");
+            }
+        }
         public void OnBallThrown()
         {
             if (currentState != GameState.WaitingForThrow)
@@ -100,7 +151,13 @@ namespace VRHoops.Core
 
         public void ResolveShot(ShotResult result)
         {
+            // --- החלק החסר: קידום הספירה ---
+            throwsInCurrentStand++;
+            // -------------------------------
+
             Debug.Log($"🎯 Shot resolved: {result}");
+
+            // ... (שאר הקוד הקיים שלך) ...
             EventBus.PublishShotResult(result);
 
             foreach (var evt in EventFactory.Build(result))
@@ -108,7 +165,6 @@ namespace VRHoops.Core
 
             currentState = GameState.Idle;
 
-            // מתחיל סיבוב חדש אחרי זמן קצר
             Invoke(nameof(StartNewRound), 2.0f);
         }
     }

@@ -8,7 +8,7 @@ namespace VRHoops.Gameplay
         private GameManager gameManager;
         private bool canBeThrown = false;
         private bool hasScored = false;
-
+        bool touch = false;
         [Header("Tags")]
         [SerializeField] private string floorTag = "Floor";
 
@@ -23,7 +23,7 @@ namespace VRHoops.Gameplay
             hasScored = false;
         }
 
-        
+       
 
         public void MarkAsScored()
         {
@@ -33,6 +33,7 @@ namespace VRHoops.Gameplay
 
         private void OnCollisionEnter(Collision collision)
         {
+            // התנאי המתוקן: רק בודק אם זו רצפה ואם עדיין לא קלענו
             if (collision.collider.CompareTag(floorTag) && !hasScored)
             {
                 gameManager.OnBallMissed();
@@ -40,3 +41,4 @@ namespace VRHoops.Gameplay
         }
     }
 }
+

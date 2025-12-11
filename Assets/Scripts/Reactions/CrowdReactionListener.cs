@@ -15,6 +15,11 @@ namespace VRHoops.Reactions
         [SerializeField] private AudioClip cheerClip;
         [SerializeField] private AudioClip booClip;
 
+
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
         private void OnEnable()
         {
             EventBus.OnGameEvent += OnGameEvent;
