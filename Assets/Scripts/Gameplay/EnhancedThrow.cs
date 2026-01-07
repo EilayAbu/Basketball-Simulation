@@ -52,9 +52,13 @@ public class EnhancedThrow : MonoBehaviour
     {
         isHeld = false;
 
-        // --- תוספת חשובה: שחרור הפיזיקה ברגע הזריקה ---
+        // משחררים את הפיזיקה
         rb.isKinematic = false;
-        // ----------------------------------------------
+
+        // --- הוסף את השורה הזו: ---
+        // מודיעים למנהל המשחק שהכדור באוויר
+        VRHoops.Core.GameManager.Instance.OnBallThrown();
+        // --------------------------
 
         ApplyThrowForce();
     }

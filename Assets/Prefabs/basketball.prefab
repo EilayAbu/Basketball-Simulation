@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253f1c9ee2755d245ad9838f3aa5e9ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwMultiplier: 2.5
+  throwMultiplier: 3
   smoothingFrames: 5
 --- !u!23 &8064970058264313442
 MeshRenderer:

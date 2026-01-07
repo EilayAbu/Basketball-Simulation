@@ -143,8 +143,8 @@ namespace VRHoops.Core
 
         public void OnBallMissed()
         {
-            if (currentState != GameState.BallInAir)
-                return;
+            //if (currentState != GameState.BallInAir)
+            //    return;
 
             ResolveShot(ShotResult.Missed);
         }

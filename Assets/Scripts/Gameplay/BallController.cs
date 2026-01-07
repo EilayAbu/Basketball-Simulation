@@ -33,6 +33,8 @@ namespace VRHoops.Gameplay
 
         private void OnCollisionEnter(Collision collision)
         {
+
+            Debug.Log(collision.gameObject.name);
             // התנאי המתוקן: רק בודק אם זו רצפה ואם עדיין לא קלענו
             if (collision.collider.CompareTag(floorTag) && !hasScored)
             {
