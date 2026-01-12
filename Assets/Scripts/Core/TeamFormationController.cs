@@ -65,15 +65,13 @@ namespace VRHoops.Characters
                     Transform targetSpot = targetFormation.GetChild(i);
                     Transform player = teamPlayers[i];
 
-                    // --- דיבאג 1: לאן השחקן אמור להגיע ---
-                    Debug.Log($"[Plan] Player '{player.name}' (Index {i}) SHOULD move to Target '{targetSpot.name}' at Position: {targetSpot.position}");
-
+                    
                     // העתקת מיקום ורוטציה
                     player.position = targetSpot.position;
                     player.rotation = targetSpot.rotation;
 
-                    // --- דיבאג 2: איפה השחקן נמצא אחרי השינוי ---
-                    Debug.Log($"[Result] Player '{player.name}' is NOW at Position: {player.position}");
+                    
+
                 }
                 else
                 {
