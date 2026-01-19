@@ -6,7 +6,6 @@ namespace VRHoops.Gameplay
     public class BallController : MonoBehaviour
     {
         private GameManager gameManager;
-        private bool canBeThrown = false;
         private bool hasScored = false;
         bool touch = false;
         [Header("Tags")]
@@ -17,9 +16,8 @@ namespace VRHoops.Gameplay
             gameManager = manager;
         }
 
-        public void EnableThrow()
+        void Start() 
         {
-            canBeThrown = true;
             hasScored = false;
         }
 

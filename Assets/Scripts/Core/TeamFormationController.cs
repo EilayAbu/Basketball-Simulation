@@ -31,17 +31,19 @@ namespace VRHoops.Characters
         }
         private void Start()
         {
-            UpdatePositions(1);
+            
         }
         private void OnEnable()
         {
             // נרשמים לאירוע שיצרנו קודם לכן (או ניצור מיד)
             EventBus.OnStageChanged += UpdatePositions;
+            EventBus.OnStart += UpdatePositions;
         }
 
         private void OnDisable()
         {
             EventBus.OnStageChanged -= UpdatePositions;
+            EventBus.OnStart -= UpdatePositions;
         }
 
         private void UpdatePositions(int stageIndex)

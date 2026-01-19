@@ -46,7 +46,10 @@ namespace VRHoops.Core
 
         private void Start()
         {
+            EventBus.StartGame();
+            
             StartNewRound();
+            
         }
 
         // מתחיל סיבוב חדש
@@ -65,8 +68,9 @@ namespace VRHoops.Core
                     Debug.Log("🎉 Experiment Finished!");
                     return;
                 }
+                EventBus.PublishStageChanged(currentStandIndex);
 
-                MovePlayerToStand(currentStandIndex);
+
             }
             // -----------------------------------------------
 
@@ -102,27 +106,12 @@ namespace VRHoops.Core
 
         private void EnableThrow()
         {
-            if (activeBall != null)
-                activeBall.EnableThrow();
+            
 
             currentState = GameState.WaitingForThrow;
             Debug.Log("✅ Player can now throw the ball!");
         }
-        private void MovePlayerToStand(int index)
-        {
-            // בדיקה שיש לנו את השחקן ושהאינדקס תקין
-            if (playerRig && index < shootingStands.Length)
-            {
-                // הזזת השחקן הפיזי
-                playerRig.transform.position = shootingStands[index].position;
-                playerRig.transform.rotation = shootingStands[index].rotation;
-
-                // שליחת הודעה למערכת (בשביל הקהל והשחקנים האחרים)
-                EventBus.PublishStageChanged(index);
-
-                Debug.Log($"Moved player to stand #{index}");
-            }
-        }
+        
         public void OnBallThrown()
         {
             if (currentState != GameState.WaitingForThrow)
