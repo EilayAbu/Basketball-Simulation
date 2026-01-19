@@ -19,19 +19,12 @@ namespace VRHoops.Core
         [Tooltip("מניעת ספירה כפולה של סל.")]
         [SerializeField] private float basketCooldownSeconds = 0.5f;
 
-        [Header("Spawn Settings")]
-        [SerializeField] private GameObject ballPrefab;
-        [SerializeField] private Transform spawnPoint;
+       
 
         private float _lastBasketTime = -999f;
         private GameState currentState = GameState.Idle;
-        private BallController activeBall;
-        [SerializeField] private Transform rightHand;
-        [SerializeField] private Transform leftHand;
-
-        [Header("Experiment Settings")]
-        [SerializeField] private GameObject playerRig; 
-        [SerializeField] private Transform[] shootingStands;
+        
+        
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -61,13 +54,6 @@ namespace VRHoops.Core
             {
                 throwsInCurrentStand = 0;
                 currentStandIndex++;
-
-                // בדיקת סיום ניסוי
-                if (currentStandIndex >= shootingStands.Length)
-                {
-                    Debug.Log("🎉 Experiment Finished!");
-                    return;
-                }
                 EventBus.PublishStageChanged(currentStandIndex);
 
 
@@ -79,28 +65,7 @@ namespace VRHoops.Core
 
             EventBus.PublishGameEvent(GameEventType.GameStart);
 
-            // הסרת הכדור הישן אם קיים
-            if (activeBall != null)
-                Destroy(activeBall.gameObject);
-
-            // יצירת הכדור החדש
-            var newBallObj = Instantiate(ballPrefab, spawnPoint.position, spawnPoint.rotation);
-
-            // אתחול BallController (חובה ללוגיקת המשחק)
-            activeBall = newBallObj.GetComponent<BallController>();
-            if (activeBall != null)
-            {
-                activeBall.gameObject.SetActive(true);
-                activeBall.Initialize(this);
-            }
-            else
-            {
-                Debug.LogError("❌ Ball prefab is missing 'BallController' script!");
-            }
-
-            // אין צורך לחבר ידיים ל-EnhancedThrow כי הוא עובד עצמאית.
-
-            // מאפשר זריקה לאחר השהיה קצרה
+            
             Invoke(nameof(EnableThrow), 1.2f);
         }
 

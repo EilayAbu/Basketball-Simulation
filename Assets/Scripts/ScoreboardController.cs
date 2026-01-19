@@ -15,13 +15,16 @@ namespace VRHoops.UI
         [SerializeField] private float gameDuration = 60f;
 
         // משתנים פרטיים לניהול מצב
-        private float currentTime;
-        private int scoreA = 0;
-        private int scoreB = 0;
+        [SerializeField] private float currentTime;
+         private int scoreA = 0;
+         private int scoreB = 0;
+        [SerializeField] private int resetScoreA , resetScoreB;
+        
         private bool isTimerRunning = false;
 
         private void Start()
         {
+            
             ResetGame();
         }
 
@@ -67,13 +70,13 @@ namespace VRHoops.UI
 
         public void ResetGame()
         {
-            scoreA = 0;
-            scoreB = 0;
+            scoreA = resetScoreA;
+            scoreB = resetScoreB;
             currentTime = gameDuration;
 
             // איפוס טקסטים
-            scoreTextA.text = "00";
-            scoreTextB.text = "00";
+            AddScoreTeamA(0);
+            AddScoreTeamB(0);
             UpdateTimerDisplay();
             isTimerRunning = false; // מחכה לפקודת התחלה
         }

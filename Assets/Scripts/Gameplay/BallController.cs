@@ -5,28 +5,16 @@ namespace VRHoops.Gameplay
 {
     public class BallController : MonoBehaviour
     {
-        private GameManager gameManager;
+    
         private bool hasScored = false;
         bool touch = false;
         [Header("Tags")]
         [SerializeField] private string floorTag = "Floor";
 
-        public void Initialize(GameManager manager)
-        {
-            gameManager = manager;
-        }
-
-        void Start() 
-        {
-            hasScored = false;
-        }
-
-       
-
         public void MarkAsScored()
         {
             hasScored = true;
-            gameManager.OnBallScored();
+            GameManager.Instance.OnBallScored();
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -36,7 +24,7 @@ namespace VRHoops.Gameplay
             // התנאי המתוקן: רק בודק אם זו רצפה ואם עדיין לא קלענו
             if (collision.collider.CompareTag(floorTag) && !hasScored)
             {
-                gameManager.OnBallMissed();
+                GameManager.Instance.OnBallMissed();
             }
         }
     }
