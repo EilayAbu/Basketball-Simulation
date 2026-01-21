@@ -10,7 +10,6 @@ namespace VRHoops.SceneSystem
         public static void TriggerSceneEnd()
             => SceneManagerSingleton.Instance?.RaiseSceneEnd();
 
-        public static void TriggerCharacterPlaced(GameObject character)
-            => SceneManagerSingleton.Instance?.RaiseCharacterPlaced(character);
+        
     }
 }

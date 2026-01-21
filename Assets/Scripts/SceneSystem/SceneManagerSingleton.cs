@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 
@@ -8,14 +8,9 @@ namespace VRHoops.SceneSystem
     {
         public static SceneManagerSingleton Instance { get; private set; }
 
-        private GameObject player;
-
-        private Vector3 pendingPosition;
-        private bool hasPendingPosition = false;
-
+        // אירועים למערכת (למשל ל-Fade או סאונד)
         public event Action OnSceneStart;
         public event Action OnSceneEnd;
-        public event Action<GameObject> OnCharacterPlaced;
 
         private void Awake()
         {
@@ -26,45 +21,20 @@ namespace VRHoops.SceneSystem
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-        public void RegisterPlayer(GameObject playerObj)
-        {
-            player = playerObj;
-            DontDestroyOnLoad(player);
-        }
-
-        public void SetNextSceneSpawnPosition(Vector3 pos)
-        {
-            pendingPosition = pos;
-            hasPendingPosition = true;
+            DontDestroyOnLoad(gameObject); // שומר רק את המנהל עצמו
         }
 
         public void LoadScene(string sceneName)
         {
+            // הודעה שהסצינה הנוכחית מסתיימת
             OnSceneEnd?.Invoke();
+
+            // טעינת הסצינה הבאה
             SceneManager.LoadScene(sceneName);
         }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            OnSceneStart?.Invoke();
-
-            if (player != null && hasPendingPosition)
-            {
-                player.transform.position = pendingPosition;
-                hasPendingPosition = false;
-
-                OnCharacterPlaced?.Invoke(player);
-            }
-        }
+        // פונקציות להפעלת האירועים מבחוץ (למשל מ-SceneStartAnchor)
         public void RaiseSceneStart() => OnSceneStart?.Invoke();
         public void RaiseSceneEnd() => OnSceneEnd?.Invoke();
-        public void RaiseCharacterPlaced(GameObject character)
-            => OnCharacterPlaced?.Invoke(character);
-
     }
 }

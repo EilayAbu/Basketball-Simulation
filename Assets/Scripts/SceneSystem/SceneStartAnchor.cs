@@ -6,7 +6,7 @@ namespace VRHoops.SceneSystem
     {
         private void Start()
         {
-            SceneManagerSingleton.Instance.SetNextSceneSpawnPosition(transform.position);
+            
             SceneEventFactory.TriggerSceneStart();
         }
     }

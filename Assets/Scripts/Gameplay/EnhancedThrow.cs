@@ -57,7 +57,9 @@ public class EnhancedThrow : MonoBehaviour
 
         // --- הוסף את השורה הזו: ---
         // מודיעים למנהל המשחק שהכדור באוויר
-        VRHoops.Core.GameManager.Instance.OnBallThrown();
+       
+        if(VRHoops.Core.GameManager.Instance != null)
+            VRHoops.Core.GameManager.Instance.OnBallThrown();
         // --------------------------
 
         ApplyThrowForce();
